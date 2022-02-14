@@ -1,10 +1,16 @@
 import logging
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
+import settings
+
 logging.basicConfig(filename="bot.log", level=logging.INFO)
 
-PROXY = {'proxy_url': 'socks5://t2.learn.python.ru:1080',
-    'urllib3_proxy_kwargs': {'username': 'learn', 'password': 'python'}}
+PROXY = {'proxy_url': settings.PROXY_URL,
+    'urllib3_proxy_kwargs': {
+        'username': settings.PROXY_USERNAME, 
+        'password': settings.PROXY_PASSWORD
+    }
+}
 
 def greet_user(update, comtext):
     print("start acted")
@@ -16,7 +22,7 @@ def talk_to_me(update, comtext):
     update.message.reply_text(user_text)
 
 def main():
-    mybot = Updater("5220783049:AAGzNdxYfqVdQaAaTr2Eicm-JG1XC35IGWg", use_context=True, request_kwargs=PROXY)
+    mybot = Updater(settings.API_KEY, use_context=True, request_kwargs=PROXY)
 
     dp = mybot.dispatcher
     dp.add_handler(CommandHandler("start", greet_user))
@@ -26,4 +32,5 @@ def main():
     mybot.start_polling()
     mybot.idle()
 
-main()
+if __name__ == "__main__":
+    main()

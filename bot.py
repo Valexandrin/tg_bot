@@ -41,6 +41,12 @@ def ask_planet_name(update, context):
             logger.info('Planet %s not found', word)    
                      
 
+def next_full_moon(update, context):    
+    logger.info(update.message.text)
+    date_time = ephem.next_full_moon(update.message.date)
+    update.message.reply_text(str(date_time)[:9])
+
+
 def word_count(update, context):
     user_text = update.message.text.split()[1:]
     logger.info(user_text)
@@ -63,6 +69,7 @@ def main():
     dp = mybot.dispatcher
     dp.add_handler(CommandHandler("start", greet_user))
     dp.add_handler(CommandHandler("planet", ask_planet_name))
+    dp.add_handler(CommandHandler("next_full_moon", next_full_moon))
     dp.add_handler(CommandHandler("wordcount", word_count))
     dp.add_handler(MessageHandler(Filters.text, talk_to_me))
 
@@ -72,4 +79,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    

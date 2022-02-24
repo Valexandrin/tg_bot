@@ -34,14 +34,18 @@ def ask_planet_name(update, context):
             logger.info('Planet %s not found', word)    
                      
 
+def humanize_ephem_date(ephem_date):
+    date = arrow.get(str(ephem_date))
+    output_date = date.format('YYYY-MM-DD')    
+    future = date.humanize(locale='ru')
+    return f'{future} ({output_date})'
+
+
 def next_full_moon(update, context):    
     logger.info(update.message.text)    
-    date_time = ephem.next_full_moon(update.message.date)
-    arrow_date = arrow.get(str(date_time))
-    output_date = arrow_date.format('YYYY-MM-DD')
-    current_date = arrow.utcnow()       
-    future = arrow_date.humanize(current_date, locale='ru')    
-    update.message.reply_text(f'{future} ({output_date})')
+    next_full_moon_date = ephem.next_full_moon(update.message.date)
+    msg = humanize_ephem_date(next_full_moon_date)       
+    update.message.reply_text(msg)
 
 
 def word_count(update, context):
